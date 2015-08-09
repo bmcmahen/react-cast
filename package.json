@@ -1,0 +1,53 @@
+{
+  "name": "react-cast",
+  "version": "1.0.0",
+  "description": "Create beautiful, animated grid-based layouts for react",
+  "scripts": {
+    "start": "node server.js",
+    "lint": "eslint src",
+    "test": "karma start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bmcmahen/react-cast.git"
+  },
+  "keywords": [
+    "react",
+    "reactjs",
+    "grid",
+    "animated",
+    "layouts",
+    "masonry"
+  ],
+  "author": "Ben McMahen",
+  "license": "MIT",
+  "homepage": "https://github.com/bmcmahen/react-cast",
+  "devDependencies": {
+    "babel-core": "^5.4.7",
+    "babel-eslint": "^3.1.9",
+    "babel-loader": "^5.3.2",
+    "eslint": "^1.0.0",
+    "eslint-plugin-react": "^2.3.0",
+    "expect": "^1.8.0",
+    "jquery": "^2.1.4",
+    "karma": "^0.13.8",
+    "karma-chrome-launcher": "^0.2.0",
+    "karma-mocha": "^0.2.0",
+    "karma-mocha-reporter": "^1.1.1",
+    "karma-phantomjs-launcher": "^0.2.1",
+    "karma-sourcemap-loader": "^0.3.5",
+    "karma-webpack": "^1.7.0",
+    "mocha": "^2.2.5",
+    "phantomjs": "^1.9.17",
+    "react-hot-loader": "^1.2.7",
+    "webpack": "^1.9.6",
+    "lodash": "^3.10.1",
+    "react": "^0.13.0",
+    "webpack-dev-server": "^1.8.2"
+  },
+  "dependencies": {
+    "lodash.assign": "^3.2.0",
+    "lodash.range": "^3.0.1",
+    "react-motion": "^0.2.6"
+  }
+}
