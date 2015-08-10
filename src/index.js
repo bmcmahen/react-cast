@@ -62,7 +62,7 @@ const Grid = React.createClass({
 
   onTouchMove(e) {
     e.preventDefault()
-    this.handleMouseMove(e.touches[0])
+    this.onMouseMove(e.touches[0])
   },
 
   onTouchStart(key, pressLocation, e) {
@@ -76,6 +76,10 @@ const Grid = React.createClass({
       delta: [pageX - pressX, pageY - pressY],
       mouse: [pressX, pressY]
     })
+  },
+
+  onTouchEnd(e) {
+    this.onMouseUp()
   },
 
   onMouseMove({pageX, pageY}) {
