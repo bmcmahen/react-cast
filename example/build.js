@@ -12107,21 +12107,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	      ),
 	      _react2['default'].createElement(
 	        'div',
-	        null,
-	        _react2['default'].createElement(
-	          'button',
-	          { onClick: this.setColumns },
-	          'Change Columns'
-	        ),
+	        { style: { textAlign: 'center' } },
 	        _react2['default'].createElement(
 	          'button',
 	          { onClick: this.removeLast },
-	          'RemoveLast'
+	          'Remove First'
 	        ),
 	        _react2['default'].createElement(
 	          'button',
 	          { onClick: this.randomOrder },
-	          'Random positions'
+	          'Random Positions'
 	        ),
 	        _react2['default'].createElement(
 	          'button',

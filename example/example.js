@@ -113,10 +113,9 @@ var GridWrapper = React.createClass({
             )
           })}
         </Grid>
-        <div>
-          <button onClick={this.setColumns}>Change Columns</button>
-          <button onClick={this.removeLast}>RemoveLast</button>
-          <button onClick={this.randomOrder}>Random positions</button>
+        <div style={{textAlign: 'center' }}>
+          <button onClick={this.removeLast}>Remove First</button>
+          <button onClick={this.randomOrder}>Random Positions</button>
           <button onClick={this.addItem}>Add Item</button>
         </div>
       </div>
