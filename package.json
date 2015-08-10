@@ -1,6 +1,6 @@
 {
   "name": "react-cast",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Create beautiful, animated grid-based layouts for react",
   "main": "lib/index.js",
   "scripts": {
