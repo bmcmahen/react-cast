@@ -5,6 +5,8 @@ react-cast
 
 Make beautiful, animated grid-layouts. Check out the example for advanced usage. This is an early release, so expect more documentation, examples, and tests, soon.
 
+View a demo [here](http://bmcmahen.github.io/react-cast/).
+
 ## Install
 ```
 $ npm install react-cast
