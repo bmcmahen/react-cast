@@ -160,6 +160,7 @@ const Grid = React.createClass({
     const {lastPress} = this.state
 
     function renderPositions(positions) {
+
       return Object.keys(positions).map((key, i) => {
         let { left, top, opacity, child, scale } = positions[key]
         let style = assign(child.props.style || {}, {

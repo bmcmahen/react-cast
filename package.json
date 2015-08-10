@@ -2,10 +2,15 @@
   "name": "react-cast",
   "version": "1.0.0",
   "description": "Create beautiful, animated grid-based layouts for react",
+  "main": "lib/index.js",
   "scripts": {
     "start": "node server.js",
+    "clean": "rimraf lib dist",
+    "build": "babel src --out-dir lib",
+    "build:umd": "webpack --config webpack-publish.config.js src/index.js dist/react-cast.js && NODE_ENV=production webpack --config webpack-publish.config.js src/index.js dist/react-cast.min.js",
     "lint": "eslint src",
-    "test": "karma start"
+    "test": "karma start",
+    "prepublish": "npm run lint && npm run clean && npm run build && npm run build:umd"
   },
   "repository": {
     "type": "git",
@@ -23,6 +28,7 @@
   "license": "MIT",
   "homepage": "https://github.com/bmcmahen/react-cast",
   "devDependencies": {
+    "babel": "^5.8.21",
     "babel-core": "^5.4.7",
     "babel-eslint": "^3.1.9",
     "babel-loader": "^5.3.2",
@@ -37,12 +43,13 @@
     "karma-phantomjs-launcher": "^0.2.1",
     "karma-sourcemap-loader": "^0.3.5",
     "karma-webpack": "^1.7.0",
+    "lodash": "^3.10.1",
     "mocha": "^2.2.5",
     "phantomjs": "^1.9.17",
-    "react-hot-loader": "^1.2.7",
-    "webpack": "^1.9.6",
-    "lodash": "^3.10.1",
     "react": "^0.13.0",
+    "react-hot-loader": "^1.2.7",
+    "rimraf": "^2.4.2",
+    "webpack": "^1.9.6",
     "webpack-dev-server": "^1.8.2"
   },
   "dependencies": {

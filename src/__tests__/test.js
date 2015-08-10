@@ -80,7 +80,7 @@ describe('Grid', () => {
   })
 
   it('should set the correct styles on the parent element', () => {
-
+    let $el = getEl(createGrid())
   })
 
   it('should emit a reorder event', () => {
@@ -92,13 +92,20 @@ describe('Grid', () => {
   })
 
   it('should animate added children', () => {
-    
+
   })
 
   it('should change positions if children order changes', () => {
 
   })
 
+  it('should not remove event handlers from cloned children', () => {
+
+  })
+
+  it('should allow the user to disable the drag event', () => {
+    
+  })
 
 
 

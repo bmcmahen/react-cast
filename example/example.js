@@ -1,20 +1,78 @@
 import React from 'react'
 import _ from 'lodash'
 import Grid from '../src'
+import {Spring} from 'react-motion'
+import GridItem from './grid-item'
+
+var projects = {
+  '0': {
+    name: 'Just Plum',
+    description: 'Create, share, and find beautiful recipes.',
+    image: 'justplum'
+  },
+  '1': {
+    name: 'Fiddleware Subtitles',
+    description: 'Create captions for your videos directly in the browser.',
+    image: 'subtitles'
+  },
+  '2': {
+    name: 'Montage',
+    description: 'Experimental home media center based on Node.js',
+    image: 'montage'
+  },
+  '3': {
+    name: 'Connections',
+    description: 'Explore the connection between ideas',
+    image: 'mindmap'
+  },
+  '4': {
+    name: 'Institutions',
+    description: 'Find eugenic institutions in Western Canada',
+    image: 'institutions'
+  },
+  '5': {
+    name: 'Media',
+    description: 'Explore videos and images from the Eugenics Archive',
+    image: 'media'
+  },
+  '6': {
+    name: 'Around the World',
+    description: 'Eugenics around the world',
+    image: 'world'
+  },
+  '7': {
+    name: 'Timeline',
+    description: 'Eugenics in Western Canada Timeline',
+    image: 'timeline'
+  },
+  '8': {
+    name: 'Chris McMahen',
+    description: 'Author website for Chris McMahen',
+    image: 'mcmahen'
+  }
+}
 
 var GridWrapper = React.createClass({
 
   getInitialState() {
     return {
-      columns: 4,
-      width: 100,
-      height: 100,
+      columns: 3,
+      width: 350,
+      height: 200,
       offsetTop: 0,
       offsetLeft: 0,
-      items: _.range(15).map(num => {
+      items: _.range(Object.keys(projects).length).map(num => {
+        let id = String(num)
+        if (projects[id]) {
+          projects[id].id = id
+          return projects[id]
+        }
+
         return {
           id : String(num),
-          text: String(num)
+          name: 'New Project',
+          image: null,
+          description: 'Space for a new project'
         }
       })
     }
@@ -30,28 +88,28 @@ var GridWrapper = React.createClass({
 
   render () {
     return (
-      <div>
-        <h1>Hello World</h1>
-        <a href='#'>Pretend Link</a>
+      <div style={{minHeight: '100%'}}>
         <Grid
           ref='grid'
           columnCount={this.state.columns}
           onReorder={this.onReorder}
           offsetTop={this.state.offsetTop}
           offsetLeft={this.state.offsetLeft}
-          style={{height: '400px'}}
+          style={{
+            height: (Math.ceil(this.state.items.length / this.state.columns)) * this.state.height,
+            width: this.state.columns * this.state.width,
+            margin: '0 auto'
+          }}
           width={this.state.width}
           height={this.state.height}>
           {this.state.items.map((item, i) => {
             return (
-              <div
+              <GridItem
+                name={item.name}
+                description={item.description}
+                image={item.image}
                 key={item.id}
-                style={{padding: '5px', boxSizing: 'border-box'}}
-                onClick={this.onItemClick.bind(this, item)}>
-                <div style={{backgroundColor: '#eee', height: '100%'}}>
-                  <a tabIndex={i + 1} href='#'># {item.text}</a>
-                </div>
-              </div>
+              />
             )
           })}
         </Grid>
