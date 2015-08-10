@@ -19,7 +19,8 @@ const Grid = React.createClass({
     offsetLeft: React.PropTypes.number,
     columnCount: React.PropTypes.number,
     width: React.PropTypes.number,
-    height: React.PropTypes.number
+    height: React.PropTypes.number,
+    transition: React.PropTypes.array
   },
 
   getInitialState() {
@@ -45,7 +46,8 @@ const Grid = React.createClass({
       height: 50,
       onReorder: noop,
       offsetTop: 0,
-      offsetLeft: 0
+      offsetLeft: 0,
+      transition: presets.stiff
     }
   },
 
@@ -105,9 +107,10 @@ const Grid = React.createClass({
   },
 
   getValues() {
-    const {children} = this.props
+    const {children, transition} = this.props
     const {lastPress, isPressed, mouse} = this.state
 
+    // not sure if this needs to be rerun each time
     let layout = this.getLayout(React.Children.count(children), this.props)
 
     var positions = {}
@@ -117,7 +120,7 @@ const Grid = React.createClass({
 
       positions[key] = {
         opacity: { val : 1 },
-        scale: { val : 1, config: presets.wobbly },
+        scale: { val : 1, config: transition },
         child: child
       }
 
@@ -126,8 +129,8 @@ const Grid = React.createClass({
         positions[key].top = { val : mouse[1], config: []}
       } else {
         let [x, y] = layout[i]
-        positions[key].left = { val : x, config: presets.wobbly }
-        positions[key].top = { val: y, config: presets.wobbly }
+        positions[key].left = { val : x, config: transition }
+        positions[key].top = { val: y, config: transition }
       }
 
     })
@@ -146,10 +149,11 @@ const Grid = React.createClass({
   },
 
   willEnter(key, val, endValue, currentValue, speed) {
+    const {transition} = this.props
     return {
       left: { val : val.left.val },
       top: { val : val.top.val },
-      scale: { val : 0, config: presets.wobbly },
+      scale: { val : 0, config: transition },
       opacity: { val : 0 },
       child: val.child
     }
@@ -158,12 +162,14 @@ const Grid = React.createClass({
   render() {
     const {children, width, height} = this.props
     const {lastPress} = this.state
+    const self = this
 
     function renderPositions(positions) {
 
       return Object.keys(positions).map((key, i) => {
         let { left, top, opacity, child, scale } = positions[key]
-        let style = assign(child.props.style || {}, {
+
+        let defaultStyle = {
           position: 'absolute',
           width: width + 'px',
           height: height + 'px',
@@ -171,12 +177,16 @@ const Grid = React.createClass({
           transform: `translate3d(${left.val}px, ${top.val}px, 0) scale(${scale.val})`,
           opacity: opacity.val,
           zIndex: key === lastPress ? 99 : 1
-        })
+        }
+
+        let style = child.props.style
+          ? assign(child.props.style, defaultStyle)
+          : defaultStyle
 
         return React.cloneElement(child, {
           style,
-          onMouseDown: this.onMouseDown.bind(null, key, [left.val, top.val]),
-          onTouchStart: this.onTouchStart.bind(null, key, [left.val, top.val])
+          onMouseDown: self.onMouseDown.bind(null, key, [left.val, top.val]),
+          onTouchStart: self.onTouchStart.bind(null, key, [left.val, top.val])
         })
       })
     }
@@ -204,7 +214,7 @@ const Grid = React.createClass({
               onTouchEnd={this.onTouchEnd}
               onMouseMove={this.onMouseMove}
               onMouseUp={this.onMouseUp}>
-                {renderPositions.call(this, positions)}
+                {renderPositions(positions)}
             </div>
           )
 

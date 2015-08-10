@@ -52,10 +52,6 @@ var GridItem = React.createClass({
     style.boxSizing = 'border-box'
 
     return (
-      <Spring
-        defaultValue={this.getDefault()}
-        endValue={this.getEndValue}>
-        {vals =>
           <div
             style={style}
             onClick={this.onClick}
@@ -101,8 +97,6 @@ var GridItem = React.createClass({
               </div>
             </div>
           </div>
-        }
-      </Spring>
     )
   }
 
