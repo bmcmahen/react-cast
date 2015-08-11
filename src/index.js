@@ -20,7 +20,8 @@ const Grid = React.createClass({
     columnCount: React.PropTypes.number,
     width: React.PropTypes.number,
     height: React.PropTypes.number,
-    transition: React.PropTypes.array
+    transition: React.PropTypes.array,
+    draggable: React.PropTypes.bool
   },
 
   getInitialState() {
@@ -47,6 +48,7 @@ const Grid = React.createClass({
       onReorder: noop,
       offsetTop: 0,
       offsetLeft: 0,
+      draggable: true,
       transition: presets.stiff
     }
   },
@@ -61,15 +63,18 @@ const Grid = React.createClass({
   },
 
   onTouchMove(e) {
+    if (!this.props.draggable) return
     e.preventDefault()
     this.onMouseMove(e.touches[0])
   },
 
   onTouchStart(key, pressLocation, e) {
+    if (!this.props.draggable) return
     this.onMouseDown(key, pressLocation, e.touches[0])
   },
 
   onMouseDown(key, [pressX, pressY], {pageX, pageY}) {
+    if (!this.props.draggable) return
     this.setState({
       lastPress: key,
       isPressed: true,
@@ -79,10 +84,12 @@ const Grid = React.createClass({
   },
 
   onTouchEnd(e) {
+    if (!this.props.draggable) return
     this.onMouseUp()
   },
 
   onMouseMove({pageX, pageY}) {
+    if (!this.props.draggable) return
     const {lastPress, isPressed, delta: [dx, dy]} = this.state
     const {width, height, columnCount, offsetTop, offsetLeft} = this.props
     const count = React.Children.count(this.props.children)
@@ -107,6 +114,7 @@ const Grid = React.createClass({
   },
 
   onMouseUp() {
+    if (!this.props.draggable) return
     this.setState({ isPressed: false, delta: [0, 0]})
   },
 

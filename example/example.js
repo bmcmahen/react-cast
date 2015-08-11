@@ -92,6 +92,7 @@ var GridWrapper = React.createClass({
         <Grid
           ref='grid'
           columnCount={this.state.columns}
+          draggable={false}
           onReorder={this.onReorder}
           offsetTop={this.state.offsetTop}
           offsetLeft={this.state.offsetLeft}
