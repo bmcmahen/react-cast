@@ -27,6 +27,22 @@ const Grid = React.createClass({
     draggable: React.PropTypes.bool
   },
 
+  componentDidMount() {
+    if (this.props.draggable) {
+      window.addEventListener('mousemove', this.onMouseMove)
+      window.addEventListener('touchmove', this.onTouchMove)
+      window.addEventListener('mouseup', this.onMouseUp)
+      window.addEventListener('touchend', this.onTouchEnd)
+    }
+  },
+
+  componentWillUnmount() {
+    window.removeEventListener('mousemove', this.onMouseMove)
+    window.removeEventListener('touchmove', this.onTouchMove)
+    window.removeEventListener('mouseup', this.onMouseUp)
+    window.removeEventListener('touchend', this.onTouchEnd)
+  },
+
   getInitialState() {
 
     let count = React.Children.count(this.props.children)
@@ -223,13 +239,8 @@ const Grid = React.createClass({
         { positions => {
 
           return (
-            <div
-              style={parentStyle}
-              onTouchMove={this.onTouchMove}
-              onTouchEnd={this.onTouchEnd}
-              onMouseMove={this.onMouseMove}
-              onMouseUp={this.onMouseUp}>
-                {renderPositions(positions)}
+            <div style={parentStyle}>
+              {renderPositions(positions)}
             </div>
           )
 
