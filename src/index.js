@@ -7,8 +7,11 @@ import {TransitionSpring, presets} from 'react-motion'
 import range from 'lodash.range'
 import assign from 'lodash.assign'
 
-
 const noop = function(){}
+
+/**
+ * Grid Class
+ */
 
 const Grid = React.createClass({
 
@@ -98,7 +101,7 @@ const Grid = React.createClass({
       const col = clamp(Math.floor((pageX - offsetLeft) / width), 0, columnCount - 1)
       const row = clamp(Math.floor((pageY - offsetTop) / height), 0, Math.floor(count / columnCount))
       const index = row * columnCount + col
-      var lastPressedIndex
+      let lastPressedIndex
 
       // inefficient -- makes more sense to record index of lastPressed
       // during the mousedown handler
@@ -125,7 +128,7 @@ const Grid = React.createClass({
     // not sure if this needs to be rerun each time
     let layout = this.getLayout(React.Children.count(children), this.props)
 
-    var positions = {}
+    let positions = {}
 
     React.Children.forEach(children, (child, i) => {
       let {type, key} = child

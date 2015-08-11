@@ -81,32 +81,44 @@ describe('Grid', () => {
 
   it('should set the correct styles on the parent element', () => {
     let $el = getEl(createGrid())
+    expect($el.css('position')).toEqual('relative')
   })
 
-  it('should emit a reorder event', () => {
-
+  it('should emit a reorder event', (next) => {
+    let grid = createGrid({ onReorder: function(){
+      next()
+    }})
+    let $el = getEl(grid)
+    let $children = Test.scryRenderedDOMComponentsWithClass(grid, 'Grid__item')
+    Test.Simulate.mouseDown($children[0], { key: '1' })
+    Test.Simulate.mouseMove($children[0], { pageX : 15, pageY: 15})
   })
 
-  it('should animate remove children', () => {
-
+  it('allow the user to disable the drag event', (next) => {
+    let grid = createGrid({
+      draggable: false,
+      onReorder: function(){
+        next(new Error('on reorder called'))
+      }})
+    let $el = getEl(grid)
+    let $children = Test.scryRenderedDOMComponentsWithClass(grid, 'Grid__item')
+    Test.Simulate.mouseDown($children[0], { key: '1' })
+    Test.Simulate.mouseMove($children[0], { pageX : 15, pageY: 15})
+    setTimeout(() => {
+      next()
+    }, 500)
   })
 
-  it('should animate added children', () => {
+  // mooar tests!
 
-  })
-
-  it('should change positions if children order changes', () => {
-
-  })
-
-  it('should not remove event handlers from cloned children', () => {
-
-  })
-
-  it('should allow the user to disable the drag event', () => {
-    
-  })
-
+  //
+  // it('should change positions if children order changes', () => {
+  //
+  // })
+  //
+  // it('should not remove event handlers from cloned children', () => {
+  //
+  // })
 
 
 })
