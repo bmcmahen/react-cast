@@ -4,7 +4,7 @@
 
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
-import {TransitionSpring, presets} from 'react-motion'
+import {TransitionMotion, spring, presets} from 'react-motion'
 import range from 'lodash.range'
 import assign from 'lodash.assign'
 
@@ -119,60 +119,60 @@ class Grid extends Component {
   }
 
   onMouseUp() {
-    if (!this.props.draggable) return
+    if (!this.props.draggable || !this.state.isPressed) return
     this.setState({ isPressed: false, delta: [0, 0]})
   }
 
-  getValues() {
+  getStyles() {
     const {children, transition} = this.props
     const {lastPress, isPressed, mouse} = this.state
 
     // not sure if this needs to be rerun each time
     let layout = this.getLayout(React.Children.count(children), this.props)
 
-    let positions = {}
-
-    React.Children.forEach(children, (child, i) => {
+    return React.Children.map(children, (child, i) => {
       let {type, key} = child
 
-      positions[key] = {
-        opacity: { val : 1 },
-        scale: { val : 1, config: transition },
-        child: child
+      let childStyle = {
+        key: key,
+        data: {
+          child: child
+        },
+        style: {
+          opacity: spring(1),
+          scale: spring(1, transition)
+        }
       }
 
       if (key === lastPress && isPressed) {
-        positions[key].left = { val : mouse[0], config: []}
-        positions[key].top = { val : mouse[1], config: []}
+        childStyle.style.left = mouse[0];
+        childStyle.style.top = mouse[1];
       } else {
         let [x, y] = layout[i]
-        positions[key].left = { val : x, config: transition }
-        positions[key].top = { val: y, config: transition }
+        childStyle.style.left = spring(x, transition);
+        childStyle.style.top = spring(y, transition);
       }
 
-    })
-
-    return positions
+      return childStyle;
+    });
   }
 
-  willLeave(key, val, endValue, currentValue, speed) {
+  willLeave(config) {
     return {
-      left: { val : val.left.val },
-      top: { val: val.top.val },
-      scale: { val : 0 },
-      opacity: { val : 0 },
-      child: val.child
+      left: config.style.left,
+      top: config.style.top,
+      scale: spring(0, this.props.transition),
+      opacity: spring(0),
     }
   }
 
-  willEnter(key, val, endValue, currentValue, speed) {
+  willEnter(config) {
     const {transition} = this.props
     return {
-      left: { val : val.left.val },
-      top: { val : val.top.val },
-      scale: { val : 0, config: transition },
-      opacity: { val : 0 },
-      child: val.child
+      left: config.style.left.val,
+      top: config.style.top.val,
+      scale: 0,
+      opacity: 0,
     }
   }
 
@@ -182,28 +182,30 @@ class Grid extends Component {
     const self = this
 
     function renderPositions(positions) {
+      return positions.map((config, i) => {
 
-      return Object.keys(positions).map((key, i) => {
-        let { left, top, opacity, child, scale } = positions[key]
+        let { left, top, opacity, scale } = config.style
+
+        const transform = `translate3d(${left}px, ${top}px, 0) scale(${scale})`;
 
         let defaultStyle = {
           position: 'absolute',
-          width: width + 'px',
-          height: height + 'px',
-          WebkitTransform: `translate3d(${left.val}px, ${top.val}px, 0) scale(${scale.val})`,
-          transform: `translate3d(${left.val}px, ${top.val}px, 0) scale(${scale.val})`,
-          opacity: opacity.val,
-          zIndex: key === lastPress ? 99 : 1
+          width: width,
+          height: height,
+          WebkitTransform: transform,
+          transform: transform,
+          opacity: opacity,
+          zIndex: config.key === lastPress ? 99 : 1
         }
 
-        let style = child.props.style
-          ? assign(child.props.style, defaultStyle)
+        let style = config.data.child.props.style
+          ? assign(config.data.child.props.style, defaultStyle)
           : defaultStyle
 
-        return React.cloneElement(child, {
+        return React.cloneElement(config.data.child, {
           style,
-          onMouseDown: self.onMouseDown.bind(null, key, [left.val, top.val]),
-          onTouchStart: self.onTouchStart.bind(null, key, [left.val, top.val])
+          onMouseDown: self.onMouseDown.bind(null, config.key, [left, top]),
+          onTouchStart: self.onTouchStart.bind(null, config.key, [left, top])
         })
       })
     }
@@ -217,10 +219,10 @@ class Grid extends Component {
       : defaultParentStyle
 
     return (
-      <TransitionSpring
-        endValue={this.getValues()}
-        willEnter={this.willEnter}
-        willLeave={this.willLeave}>
+      <TransitionMotion
+        styles={this.getStyles()}
+        willLeave={this.willLeave}
+        willEnter={this.willEnter}>
 
         { positions => {
 
@@ -232,7 +234,7 @@ class Grid extends Component {
 
         }}
 
-      </TransitionSpring>
+      </TransitionMotion>
     );
   }
 }
@@ -256,7 +258,11 @@ Grid.propTypes = {
   columnCount: PropTypes.number,
   width: PropTypes.number,
   height: PropTypes.number,
-  transition: PropTypes.array,
+  transition: PropTypes.shape({
+    stiffness: PropTypes.number,
+    damping: PropTypes.number,
+    precision: PropTypes.number
+  }),
   draggable: PropTypes.bool
 };
 
