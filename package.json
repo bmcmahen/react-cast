@@ -28,10 +28,12 @@
   "license": "MIT",
   "homepage": "https://github.com/bmcmahen/react-cast",
   "devDependencies": {
-    "babel": "^6.23.0",
+    "babel-cli": "^6.24.1",
     "babel-core": "^6.25.0",
     "babel-eslint": "^7.2.3",
     "babel-loader": "^7.1.1",
+    "babel-preset-env": "^1.6.0",
+    "babel-preset-react": "^6.24.1",
     "eslint": "^4.3.0",
     "eslint-plugin-react": "^7.1.0",
     "expect": "^1.8.0",
