@@ -50,7 +50,7 @@
     "lodash": "^3.10.1",
     "mocha": "^2.2.5",
     "phantomjs": "^1.9.17",
-    "react": "^0.13.0",
+    "react": "^15.6.1",
     "react-hot-loader": "^1.2.7",
     "rimraf": "^2.4.2",
     "webpack": "^1.9.6",
@@ -59,6 +59,8 @@
   "dependencies": {
     "lodash.assign": "^3.2.0",
     "lodash.range": "^3.0.1",
+    "prop-types": "^15.5.10",
+    "react-dom": "^15.6.1",
     "react-motion": "^0.2.6"
   }
 }

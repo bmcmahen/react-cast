@@ -1,4 +1,6 @@
 import React from 'react'
+import ReactDOM from 'react-dom';
+
 import GridWrapper from './example'
 
-React.render(<GridWrapper />, document.getElementById('root'))
+ReactDOM.render(<GridWrapper />, document.getElementById('root'))

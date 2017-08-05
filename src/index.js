@@ -2,7 +2,8 @@
  * Module Dependencies
  */
 
-import React from 'react'
+import React, {Component} from 'react'
+import PropTypes from 'prop-types'
 import {TransitionSpring, presets} from 'react-motion'
 import range from 'lodash.range'
 import assign from 'lodash.assign'
@@ -13,42 +14,24 @@ const noop = function(){}
  * Grid Class
  */
 
-const Grid = React.createClass({
+class Grid extends Component {
 
-  propTypes: {
-    style: React.PropTypes.object,
-    onReorder: React.PropTypes.func,
-    offsetTop: React.PropTypes.number,
-    offsetLeft: React.PropTypes.number,
-    columnCount: React.PropTypes.number,
-    width: React.PropTypes.number,
-    height: React.PropTypes.number,
-    transition: React.PropTypes.array,
-    draggable: React.PropTypes.bool
-  },
+  constructor(props) {
+    super(props);
 
-  componentDidMount() {
-    if (this.props.draggable) {
-      window.addEventListener('mousemove', this.onMouseMove)
-      window.addEventListener('touchmove', this.onTouchMove)
-      window.addEventListener('mouseup', this.onMouseUp)
-      window.addEventListener('touchend', this.onTouchEnd)
-    }
-  },
+    this.onMouseMove = this.onMouseMove.bind(this);
+    this.onTouchMove = this.onTouchMove.bind(this);
+    this.onMouseDown = this.onMouseDown.bind(this);
+    this.onMouseUp = this.onMouseUp.bind(this);
+    this.onTouchEnd = this.onTouchEnd.bind(this);
 
-  componentWillUnmount() {
-    window.removeEventListener('mousemove', this.onMouseMove)
-    window.removeEventListener('touchmove', this.onTouchMove)
-    window.removeEventListener('mouseup', this.onMouseUp)
-    window.removeEventListener('touchend', this.onTouchEnd)
-  },
+    this.willLeave = this.willLeave.bind(this);
+    this.willEnter = this.willEnter.bind(this);
 
-  getInitialState() {
+    const count = React.Children.count(this.props.children);
+    const layout = this.getLayout(count, this.props);
 
-    let count = React.Children.count(this.props.children)
-    let layout = this.getLayout(count, this.props)
-
-    return {
+    this.state = {
       even: 0,
       mouse: [0, 0],
       delta: [0, 0],
@@ -57,20 +40,23 @@ const Grid = React.createClass({
       count,
       layout
     };
-  },
+  }
 
-  getDefaultProps () {
-    return {
-      columnCount: 3,
-      width: 50,
-      height: 50,
-      onReorder: noop,
-      offsetTop: 0,
-      offsetLeft: 0,
-      draggable: true,
-      transition: presets.stiff
+  componentDidMount() {
+    if (this.props.draggable) {
+      window.addEventListener('mousemove', this.onMouseMove)
+      window.addEventListener('touchmove', this.onTouchMove)
+      window.addEventListener('mouseup', this.onMouseUp)
+      window.addEventListener('touchend', this.onTouchEnd)
     }
-  },
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('mousemove', this.onMouseMove)
+    window.removeEventListener('touchmove', this.onTouchMove)
+    window.removeEventListener('mouseup', this.onMouseUp)
+    window.removeEventListener('touchend', this.onTouchEnd)
+  }
 
   getLayout (count, props) {
     let {columnCount, width, height} = props
@@ -79,18 +65,18 @@ const Grid = React.createClass({
       let col = n % columnCount
       return [width * col, height * row]
     })
-  },
+  }
 
   onTouchMove(e) {
     if (!this.props.draggable) return
     e.preventDefault()
     this.onMouseMove(e.touches[0])
-  },
+  }
 
   onTouchStart(key, pressLocation, e) {
     if (!this.props.draggable) return
     this.onMouseDown(key, pressLocation, e.touches[0])
-  },
+  }
 
   onMouseDown(key, [pressX, pressY], {pageX, pageY}) {
     if (!this.props.draggable) return
@@ -100,12 +86,12 @@ const Grid = React.createClass({
       delta: [pageX - pressX, pageY - pressY],
       mouse: [pressX, pressY]
     })
-  },
+  }
 
   onTouchEnd(e) {
     if (!this.props.draggable) return
     this.onMouseUp()
-  },
+  }
 
   onMouseMove({pageX, pageY}) {
     if (!this.props.draggable) return
@@ -130,12 +116,12 @@ const Grid = React.createClass({
       this.props.onReorder(lastPressedIndex, index, this.props.children)
       this.setState({ mouse: [pageX - dx, pageY - dy] })
     }
-  },
+  }
 
   onMouseUp() {
     if (!this.props.draggable) return
     this.setState({ isPressed: false, delta: [0, 0]})
-  },
+  }
 
   getValues() {
     const {children, transition} = this.props
@@ -167,7 +153,7 @@ const Grid = React.createClass({
     })
 
     return positions
-  },
+  }
 
   willLeave(key, val, endValue, currentValue, speed) {
     return {
@@ -177,7 +163,7 @@ const Grid = React.createClass({
       opacity: { val : 0 },
       child: val.child
     }
-  },
+  }
 
   willEnter(key, val, endValue, currentValue, speed) {
     const {transition} = this.props
@@ -188,7 +174,7 @@ const Grid = React.createClass({
       opacity: { val : 0 },
       child: val.child
     }
-  },
+  }
 
   render() {
     const {children, width, height} = this.props
@@ -248,9 +234,31 @@ const Grid = React.createClass({
 
       </TransitionSpring>
     );
-  },
-});
+  }
+}
 
+Grid.defaultProps = {
+  columnCount: 3,
+  width: 50,
+  height: 50,
+  onReorder: noop,
+  offsetTop: 0,
+  offsetLeft: 0,
+  draggable: true,
+  transition: presets.stiff
+};
+
+Grid.propTypes = {
+  style: PropTypes.object,
+  onReorder: PropTypes.func,
+  offsetTop: PropTypes.number,
+  offsetLeft: PropTypes.number,
+  columnCount: PropTypes.number,
+  width: PropTypes.number,
+  height: PropTypes.number,
+  transition: PropTypes.array,
+  draggable: PropTypes.bool
+};
 
 function clamp(n, min, max) {
   return Math.max(Math.min(n, max), min)

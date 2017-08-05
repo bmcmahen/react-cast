@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Component} from 'react'
 import _ from 'lodash'
 import Grid from '../src'
 import {Spring} from 'react-motion'
@@ -52,10 +52,21 @@ var projects = {
   }
 }
 
-var GridWrapper = React.createClass({
+class GridWrapper extends Component {
 
-  getInitialState() {
-    return {
+  constructor(props) {
+    super(props);
+
+    this.onReorder = this.onReorder.bind(this);
+    this.onItemClick = this.onItemClick.bind(this);
+    this.onReorder = this.onReorder.bind(this);
+    this.randomOrder = this.randomOrder.bind(this);
+    this.setColumns = this.setColumns.bind(this);
+    this.removeLast = this.removeLast.bind(this);
+    this.addItem = this.addItem.bind(this);
+    this.random = this.random.bind(this);
+
+    this.state = {
       columns: 3,
       width: 350,
       height: 200,
@@ -76,21 +87,23 @@ var GridWrapper = React.createClass({
         }
       })
     }
-  },
+  }
 
   componentDidMount() {
-    let el = React.findDOMNode(this.refs.grid)
-    this.setState({
-      offsetTop: el.offsetTop,
-      offsetLeft: el.offsetLeft
-    })
-  },
+    if ( this.gridElement ) {
+      this.setState({
+        offsetTop: this.gridElement.offsetTop,
+        offsetLeft: this.gridElement.offsetLeft
+      })
+    }
+  }
 
   render () {
     return (
       <div style={{minHeight: '100%'}}>
         <Grid
           ref='grid'
+          ref={(el) => this.gridElement = el}
           columnCount={this.state.columns}
           onReorder={this.onReorder}
           offsetTop={this.state.offsetTop}
@@ -121,7 +134,7 @@ var GridWrapper = React.createClass({
         </div>
       </div>
     )
-  },
+  }
 
   onReorder(originalIndex, newIndex) {
     const _arr = this.state.items.slice(0)
@@ -129,13 +142,13 @@ var GridWrapper = React.createClass({
     _arr.splice(originalIndex, 1)
     _arr.splice(newIndex, 0, val)
     this.setState({ items: _arr })
-  },
+  }
 
   randomOrder() {
     this.setState({
       items: _.shuffle(this.state.items)
     })
-  },
+  }
 
   setColumns() {
     this.total = this.total || 0
@@ -144,31 +157,31 @@ var GridWrapper = React.createClass({
     this.setState({
       columns: this.total % 2 ? 2 : 4
     })
-  },
+  }
 
   removeLast() {
     let items = this.state.items
     items.shift() // mutate
     this.setState({items: items })
-  },
+  }
 
   addItem() {
     let items = this.state.items
     this.newer = this.newer ? this.newer + 1 : 16
     items.push({ id : String(this.newer), text: String(this.newer)})
     this.setState({ items: items })
-  },
+  }
 
   random () {
     let items = {...this.state.items}
     this.setState({
       items: _.shuffle(items)
     })
-  },
+  }
 
   onItemClick (item, e) {
     console.log('clicked', item)
-  },
+  }
 
   sort (inverse) {
     let items = {...this.state.items}
@@ -179,7 +192,7 @@ var GridWrapper = React.createClass({
     this.setState({
       items: sorted
     })
-  },
+  }
 
   filter (query) {
     if (!this.filtered) {
@@ -194,6 +207,6 @@ var GridWrapper = React.createClass({
   }
 
 
-})
+}
 
 module.exports = GridWrapper
