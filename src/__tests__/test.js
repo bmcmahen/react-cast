@@ -1,10 +1,11 @@
 import Grid from '../index'
-import React from 'react/addons'
+import React from 'react'
+import ReactDOM from 'react-dom'
+import Test from 'react-dom/test-utils'
 import expect from 'expect'
 import _ from 'lodash'
 import $ from 'jquery'
 
-const Test = React.addons.TestUtils
 const noop = () => {}
 
 describe('Grid', () => {
@@ -39,7 +40,7 @@ describe('Grid', () => {
   }
 
   function getEl(component) {
-    return $(React.findDOMNode(component))
+    return $(ReactDOM.findDOMNode(component))
   }
 
   it('should render the passed in children', () => {
