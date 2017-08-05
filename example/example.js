@@ -161,8 +161,10 @@ class GridWrapper extends Component {
 
   removeLast() {
     let items = this.state.items
-    items.shift() // mutate
-    this.setState({items: items })
+    items.pop();
+    this.setState({
+      items: items
+    });
   }
 
   addItem() {
