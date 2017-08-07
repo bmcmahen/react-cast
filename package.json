@@ -8,7 +8,6 @@
     "clean": "rimraf lib dist",
     "build": "babel src --out-dir lib",
     "build:umd": "webpack --config webpack-publish.config.js src/index.js dist/react-cast.js && NODE_ENV=production webpack --config webpack-publish.config.js src/index.js dist/react-cast.min.js",
-    "lint": "eslint src",
     "test": "karma start",
     "prepublish": "npm run clean && npm run build && npm run build:umd"
   },
