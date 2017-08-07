@@ -22,7 +22,7 @@ module.exports = function (config) {
           {
             test: /\.jsx?$/,
             include: path.join(__dirname, 'src'),
-            loader: 'babel?stage=0'
+            loader: 'babel'
           }
         ]
       }

@@ -1,31 +1,22 @@
-import React from 'react'
+import React, {Component} from 'react'
+import PropTypes from 'prop-types'
 import {Spring, presets} from 'react-motion'
 
-var GridItem = React.createClass({
+class GridItem extends Component {
 
-  propTypes: {
-    style: React.PropTypes.object,
-    disabled: React.PropTypes.bool,
-    name: React.PropTypes.string,
-    link: React.PropTypes.string,
-    image: React.PropTypes.string
-  },
+  constructor(props) {
+    super(props);
 
-  getDefaultProps() {
-    return {
+    this.onClick = this.onClick.bind(this);
+
+    this.state = {
       disabled: false
-    }
-  },
-
-  getInitialState() {
-    return {
-      disabled: false
-    }
-  },
+    };
+  }
 
   onClick(e) {
     this.setState({ disabled: !this.state.disabled })
-  },
+  }
 
   getDefault() {
     return {
@@ -34,7 +25,7 @@ var GridItem = React.createClass({
       scale: { val : 1, config: presets.wobbly},
       grayscale: { val : 0, config: presets.noWobble}
     }
-  },
+  }
 
   getEndValue() {
     return {
@@ -43,7 +34,7 @@ var GridItem = React.createClass({
       scale: { val : this.state.disabled ? 0.5 : 1, config: presets.wobbly },
       grayscale: { val : this.state.disabled ? 1 : 0, config: presets.noWobble }
     }
-  },
+  }
 
   render() {
     const {style, name, image, description, ...other} = this.props
@@ -100,6 +91,18 @@ var GridItem = React.createClass({
     )
   }
 
-})
+}
+
+GridItem.defaultProps = {
+  disabled: false
+};
+
+GridItem.propTypes = {
+  style: PropTypes.object,
+  disabled: PropTypes.bool,
+  name: PropTypes.string,
+  link: PropTypes.string,
+  image: PropTypes.string
+};
 
 export default GridItem
