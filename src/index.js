@@ -2,34 +2,33 @@
  * Module Dependencies
  */
 
-import React, {Component} from 'react'
-import PropTypes from 'prop-types'
-import {TransitionMotion, spring, presets} from 'react-motion'
-import range from 'lodash.range'
-import assign from 'lodash.assign'
+import React, { Component } from "react"
+import PropTypes from "prop-types"
+import { TransitionMotion, spring, presets } from "react-motion"
+import range from "lodash.range"
+import assign from "lodash.assign"
 
-const noop = function(){}
+const noop = function() {}
 
 /**
  * Grid Class
  */
 
 class Grid extends Component {
-
   constructor(props) {
-    super(props);
+    super(props)
 
-    this.onMouseMove = this.onMouseMove.bind(this);
-    this.onTouchMove = this.onTouchMove.bind(this);
-    this.onMouseDown = this.onMouseDown.bind(this);
-    this.onMouseUp = this.onMouseUp.bind(this);
-    this.onTouchEnd = this.onTouchEnd.bind(this);
+    this.onMouseMove = this.onMouseMove.bind(this)
+    this.onTouchMove = this.onTouchMove.bind(this)
+    this.onMouseDown = this.onMouseDown.bind(this)
+    this.onMouseUp = this.onMouseUp.bind(this)
+    this.onTouchEnd = this.onTouchEnd.bind(this)
 
-    this.willLeave = this.willLeave.bind(this);
-    this.willEnter = this.willEnter.bind(this);
+    this.willLeave = this.willLeave.bind(this)
+    this.willEnter = this.willEnter.bind(this)
 
-    const count = React.Children.count(this.props.children);
-    const layout = this.getLayout(count, this.props);
+    const count = React.Children.count(this.props.children)
+    const layout = this.getLayout(count, this.props)
 
     this.state = {
       even: 0,
@@ -39,27 +38,27 @@ class Grid extends Component {
       isPressed: false,
       count,
       layout
-    };
+    }
   }
 
   componentDidMount() {
     if (this.props.draggable) {
-      window.addEventListener('mousemove', this.onMouseMove)
-      window.addEventListener('touchmove', this.onTouchMove)
-      window.addEventListener('mouseup', this.onMouseUp)
-      window.addEventListener('touchend', this.onTouchEnd)
+      window.addEventListener("mousemove", this.onMouseMove)
+      window.addEventListener("touchmove", this.onTouchMove)
+      window.addEventListener("mouseup", this.onMouseUp)
+      window.addEventListener("touchend", this.onTouchEnd)
     }
   }
 
   componentWillUnmount() {
-    window.removeEventListener('mousemove', this.onMouseMove)
-    window.removeEventListener('touchmove', this.onTouchMove)
-    window.removeEventListener('mouseup', this.onMouseUp)
-    window.removeEventListener('touchend', this.onTouchEnd)
+    window.removeEventListener("mousemove", this.onMouseMove)
+    window.removeEventListener("touchmove", this.onTouchMove)
+    window.removeEventListener("mouseup", this.onMouseUp)
+    window.removeEventListener("touchend", this.onTouchEnd)
   }
 
-  getLayout (count, props) {
-    let {columnCount, width, height} = props
+  getLayout(count, props) {
+    let { columnCount, width, height } = props
     return range(count).map(n => {
       let row = Math.floor(n / columnCount)
       let col = n % columnCount
@@ -78,7 +77,7 @@ class Grid extends Component {
     this.onMouseDown(key, pressLocation, e.touches[0])
   }
 
-  onMouseDown(key, [pressX, pressY], {pageX, pageY}) {
+  onMouseDown(key, [pressX, pressY], { pageX, pageY }) {
     if (!this.props.draggable) return
     this.setState({
       lastPress: key,
@@ -93,15 +92,23 @@ class Grid extends Component {
     this.onMouseUp()
   }
 
-  onMouseMove({pageX, pageY}) {
+  onMouseMove({ pageX, pageY }) {
     if (!this.props.draggable) return
-    const {lastPress, isPressed, delta: [dx, dy]} = this.state
-    const {width, height, columnCount, offsetTop, offsetLeft} = this.props
+    const { lastPress, isPressed, delta: [dx, dy] } = this.state
+    const { width, height, columnCount, offsetTop, offsetLeft } = this.props
     const count = React.Children.count(this.props.children)
 
     if (isPressed) {
-      const col = clamp(Math.floor((pageX - offsetLeft) / width), 0, columnCount - 1)
-      const row = clamp(Math.floor((pageY - offsetTop) / height), 0, Math.floor(count / columnCount))
+      const col = clamp(
+        Math.floor((pageX - offsetLeft) / width),
+        0,
+        columnCount - 1
+      )
+      const row = clamp(
+        Math.floor((pageY - offsetTop) / height),
+        0,
+        Math.floor(count / columnCount)
+      )
       const index = row * columnCount + col
       let lastPressedIndex
 
@@ -120,18 +127,18 @@ class Grid extends Component {
 
   onMouseUp() {
     if (!this.props.draggable || !this.state.isPressed) return
-    this.setState({ isPressed: false, delta: [0, 0]})
+    this.setState({ isPressed: false, delta: [0, 0] })
   }
 
   getStyles() {
-    const {children, transition} = this.props
-    const {lastPress, isPressed, mouse} = this.state
+    const { children, transition } = this.props
+    const { lastPress, isPressed, mouse } = this.state
 
     // not sure if this needs to be rerun each time
     let layout = this.getLayout(React.Children.count(children), this.props)
 
     return React.Children.map(children, (child, i) => {
-      let {type, key} = child
+      let { type, key } = child
 
       let childStyle = {
         key: key,
@@ -145,16 +152,16 @@ class Grid extends Component {
       }
 
       if (key === lastPress && isPressed) {
-        childStyle.style.left = mouse[0];
-        childStyle.style.top = mouse[1];
+        childStyle.style.left = mouse[0]
+        childStyle.style.top = mouse[1]
       } else {
         let [x, y] = layout[i]
-        childStyle.style.left = spring(x, transition);
-        childStyle.style.top = spring(y, transition);
+        childStyle.style.left = spring(x, transition)
+        childStyle.style.top = spring(y, transition)
       }
 
-      return childStyle;
-    });
+      return childStyle
+    })
   }
 
   willLeave(config) {
@@ -162,34 +169,33 @@ class Grid extends Component {
       left: config.style.left,
       top: config.style.top,
       scale: spring(0, this.props.transition),
-      opacity: spring(0),
+      opacity: spring(0)
     }
   }
 
   willEnter(config) {
-    const {transition} = this.props
+    const { transition } = this.props
     return {
       left: config.style.left.val,
       top: config.style.top.val,
       scale: 0,
-      opacity: 0,
+      opacity: 0
     }
   }
 
   render() {
-    const {children, width, height} = this.props
-    const {lastPress} = this.state
+    const { children, width, height } = this.props
+    const { lastPress } = this.state
     const self = this
 
     function renderPositions(positions) {
       return positions.map((config, i) => {
-
         let { left, top, opacity, scale } = config.style
 
-        const transform = `translate3d(${left}px, ${top}px, 0) scale(${scale})`;
+        const transform = `translate3d(${left}px, ${top}px, 0) scale(${scale})`
 
         let defaultStyle = {
-          position: 'absolute',
+          position: "absolute",
           width: width,
           height: height,
           WebkitTransform: transform,
@@ -211,7 +217,7 @@ class Grid extends Component {
     }
 
     let defaultParentStyle = {
-      position: 'relative'
+      position: "relative"
     }
 
     const parentStyle = this.props.style
@@ -222,20 +228,17 @@ class Grid extends Component {
       <TransitionMotion
         styles={this.getStyles()}
         willLeave={this.willLeave}
-        willEnter={this.willEnter}>
-
-        { positions => {
-
+        willEnter={this.willEnter}
+      >
+        {positions => {
           return (
             <div style={parentStyle}>
               {renderPositions(positions)}
             </div>
           )
-
         }}
-
       </TransitionMotion>
-    );
+    )
   }
 }
 
@@ -248,7 +251,7 @@ Grid.defaultProps = {
   offsetLeft: 0,
   draggable: true,
   transition: presets.stiff
-};
+}
 
 Grid.propTypes = {
   style: PropTypes.object,
@@ -264,10 +267,10 @@ Grid.propTypes = {
     precision: PropTypes.number
   }),
   draggable: PropTypes.bool
-};
+}
 
 function clamp(n, min, max) {
   return Math.max(Math.min(n, max), min)
 }
 
-export default Grid;
+export default Grid

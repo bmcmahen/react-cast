@@ -1,6 +1,6 @@
 {
   "name": "react-cast",
-  "version": "1.1.3",
+  "version": "1.2.0",
   "description": "Create beautiful, animated grid-based layouts for react",
   "main": "lib/index.js",
   "scripts": {
@@ -10,20 +10,13 @@
     "build:umd": "webpack --config webpack-publish.config.js src/index.js dist/react-cast.js && NODE_ENV=production webpack --config webpack-publish.config.js src/index.js dist/react-cast.min.js",
     "lint": "eslint src",
     "test": "karma start",
-    "prepublish": "npm run lint && npm run clean && npm run build && npm run build:umd"
+    "prepublish": "npm run clean && npm run build && npm run build:umd"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/bmcmahen/react-cast.git"
   },
-  "keywords": [
-    "react",
-    "reactjs",
-    "grid",
-    "animated",
-    "layouts",
-    "masonry"
-  ],
+  "keywords": ["react", "reactjs", "grid", "animated", "layouts", "masonry"],
   "author": "Ben McMahen",
   "license": "MIT",
   "homepage": "https://github.com/bmcmahen/react-cast",
